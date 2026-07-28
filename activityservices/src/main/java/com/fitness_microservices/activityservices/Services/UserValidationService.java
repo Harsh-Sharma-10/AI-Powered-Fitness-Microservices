@@ -22,7 +22,7 @@ public class UserValidationService {
             /// make API Call
             log.info("Calling the User Validation API  {}", userid);
             return  Boolean.TRUE.equals(userserviceWebClient.get()
-                    .uri("/api/users/{userid}/validate", userid)
+                    .uri("/api/users/{userid}/validate",userid)
                     .retrieve()         /// make API Call
                     .bodyToMono(Boolean.class)
                     .block());

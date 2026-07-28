@@ -79,6 +79,8 @@ public class UserServices {
 
     }
 
+    /// @Helps in the Asynchrounous communication while acrtivity service will sends a requests to user services
+    /// for the users validations by the user ID
     public Boolean existsbyuserid(String userid) {
         log.info("Checking if exists by userid  for User Validation : {}", userid);
           return userRepository.existsById(userid);
