@@ -22,6 +22,8 @@ public class ActivityServices {
     private final UserValidationService userValidationService;
     private final RabbitTemplate rabbitTemplate;
 
+
+    /// @Value annotation will injecting the properties from yml file to these attributes
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
@@ -73,7 +75,7 @@ public class ActivityServices {
 
         try{
             log.info("Putting the message into the RabbitMQ");
-            rabbitTemplate.convertAndSend(exchange,routingkey,activity);  ///@Sent the message to the Rabbit Mq
+            rabbitTemplate.convertAndSend(exchange,routingkey,activity);  ///@Sent the message to the Rabbit Mq using the filed exchange, routing key, activity
         }catch(Exception e){
             log.error("Message cannot be sent to RabbitMQ", e.getMessage());
         }
