@@ -5,7 +5,6 @@ import com.fitness_microservices.activityservices.ActivityDTO.ActivityResponse;
 import com.fitness_microservices.activityservices.Mapper.MapperClass;
 import com.fitness_microservices.activityservices.Repository.ActivityRepo;
 import com.fitness_microservices.activityservices.model.Activity;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,13 +22,11 @@ public class ActivityServices {
     private final RabbitTemplate rabbitTemplate;
 
 
-    /// @Value annotation will injecting the properties from yml file to these attributes
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
     @Value("${rabbitmq.routing.key}")
     private String routingkey;
-
 
 
      public ActivityServices( ActivityRepo  activityRepo,
@@ -38,13 +35,8 @@ public class ActivityServices {
             this.activityRepo = activityRepo;                                                          /// @RequiredArgsConstructor
             this.userValidationService  =  userValidationService;
             this.rabbitTemplate = rabbitTemplate;
+
     }
-
-
-
-
-
-    
     public ActivityResponse getActivitybyid(String activityId) {
         return activityRepo
                 .findById(activityId)
@@ -66,13 +58,14 @@ public class ActivityServices {
                    .collect(Collectors.toList());
     }
     public ActivityResponse addActivity(ActivityRequest activityRequest){
-        boolean isValiduser = userValidationService.validateUser(activityRequest.getUserId());
+
+
+        boolean isValiduser = userValidationService.validateUser(activityRequest.getUserId());/// First validate the user before adding an activity
         if(!isValiduser){
             throw new RuntimeException("Invalid user : " + activityRequest.getUserId());
         }
         Activity activity = MapperClass.activityrequest(activityRequest);
         activityRepo.save(activity);
-
         try{
             log.info("Putting the message into the RabbitMQ");
             rabbitTemplate.convertAndSend(exchange,routingkey,activity);  ///@Sent the message to the Rabbit Mq using the filed exchange, routing key, activity
