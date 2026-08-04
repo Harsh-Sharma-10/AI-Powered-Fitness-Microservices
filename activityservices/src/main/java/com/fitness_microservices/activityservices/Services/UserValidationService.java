@@ -28,6 +28,8 @@ public class UserValidationService {
                     .block());
 
         } catch (WebClientResponseException e) {
+
+            /// Through an exception
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new RuntimeException("User Not Found : " + userid);
             } else if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
