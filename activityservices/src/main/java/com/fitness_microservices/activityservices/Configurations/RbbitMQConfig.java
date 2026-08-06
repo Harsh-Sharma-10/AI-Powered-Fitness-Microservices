@@ -25,7 +25,7 @@ public class RbbitMQConfig {
 
     @Bean
     public Queue activityQueue(){
-         return new Queue(queue,true);
+        return new Queue(queue,true);
     }
 
     @Bean
@@ -35,7 +35,9 @@ public class RbbitMQConfig {
 
     @Bean
     public Binding activityBinding(){
-        return BindingBuilder.bind(activityQueue()).to(activityExchange()).with(routingkey);
+        return BindingBuilder.bind(activityQueue())
+                .to(activityExchange())
+                .with(routingkey);
     }
 
     @Bean

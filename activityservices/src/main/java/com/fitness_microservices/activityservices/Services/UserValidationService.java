@@ -21,6 +21,7 @@ public class UserValidationService {
         try {/// make API Call
             /// make API Call
             log.info("Calling the User Validation API  {}", userid);
+            /// @Builde_Pattern_Method_Chaining
             return  Boolean.TRUE.equals(userserviceWebClient.get()
                     .uri("/api/users/{userid}/validate",userid)
                     .retrieve()         /// make API Call

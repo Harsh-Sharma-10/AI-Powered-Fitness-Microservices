@@ -4,7 +4,7 @@ package aiservices.example.AiService.Services;
 import aiservices.example.AiService.DTO.MapperClass;
 import aiservices.example.AiService.DTO.RecommendationResponseDTO;
 import aiservices.example.AiService.Model.Recommendation;
-import aiservices.example.AiService.RecommandRepo.recommRepository;
+import aiservices.example.AiService.RecommandRepo.RecommRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class recommServices {
-        private final recommRepository recommendationRepository;
+        private final RecommRepository recommendationRepository;
 
-        public recommServices(recommRepository recommendationRepository) {
+        public recommServices(RecommRepository recommendationRepository) {
             this.recommendationRepository = recommendationRepository;
         }
 
@@ -33,4 +33,5 @@ public class recommServices {
           return MapperClass.toRecommendationResponseDTO(recommendations);
 
     }
+
 }

@@ -2,7 +2,6 @@ package com.fitness_microservices.activityservices.ActivityDTO;
 
 import com.fitness_microservices.activityservices.Enums.ActivityType;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.Map;
 

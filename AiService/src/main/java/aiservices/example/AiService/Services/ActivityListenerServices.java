@@ -15,7 +15,6 @@ public class ActivityListenerServices {
 
     private final ActivityAiService activityAiService;
 
-
     @RabbitListener(queues = "activity.queue")
     public void Activitylistener(Activity activity) {
         try {

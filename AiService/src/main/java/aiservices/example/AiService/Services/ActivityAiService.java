@@ -2,7 +2,9 @@ package aiservices.example.AiService.Services;
 
 
 import aiservices.example.AiService.Model.Activity;
-import lombok.Getter;
+import aiservices.example.AiService.RecommandRepo.RecommRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,12 +15,49 @@ import org.springframework.stereotype.Service;
 public class ActivityAiService {
 
     private final GeminiService geminiService;
+    private final RecommRepository recommRepository;
 
     public String generateRecommendation(Activity activity) {
         String prompt = createPromptactivity(activity);
         String airesponse = geminiService.getAnswer(prompt);
-        log.info("AI response is {}", airesponse);
+        processAiresponse(activity, airesponse);
         return airesponse;
+
+    }
+    private void processAiresponse(Activity activity, String airesponse) {
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(airesponse);
+
+            JsonNode textnode = jsonNode.path("candidates")
+                    .get(0)
+                    .path("content")
+                    .path("parts")
+                    .get(0)
+                    .path("text");
+
+            String jsontext = textnode.asText()
+                    .replaceAll("```json\\n","")
+                    .replaceAll("\\n```","")
+                    .trim();
+            log.info("AI response : " + jsontext);
+
+            JsonNode jsonNode1 = mapper.readTree(jsontext);
+
+            JsonNode analysis = jsonNode1.path("analysis");
+
+            String overall = analysis.path("overall").asText();
+            String pace = analysis.path("pace").asText();
+            String heartRate = analysis.path("heartRate").asText();
+            String calories = analysis.path("caloriesBurned").asText();
+
+            log.info("Overall : {}", overall);
+            log.info("Pace : {}", pace);
+            log.info("Heart Rate : {}", heartRate);
+            log.info("Calories : {}", calories);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     private String createPromptactivity(Activity activity) {
@@ -63,5 +102,6 @@ public class ActivityAiService {
                 activity.getCalories(),
                 activity.getAdditionalMatrics()
         );
+
     }
 }

@@ -1,7 +1,6 @@
 package aiservices.example.AiService.Config;
 
 
-import com.rabbitmq.client.AMQP;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -16,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQconfig {
 
     @Value("${rabbitmq.queue.name}")
-    private String queue;;
+    private String queue;
 
     @Value("${rabbitmq.exchange.name}")
     private String exchange;

@@ -68,7 +68,7 @@ public class ActivityServices {
         activityRepo.save(activity);
         try{
             log.info("Putting the message into the RabbitMQ");
-            rabbitTemplate.convertAndSend(exchange,routingkey,activity);  ///@Sent the message to the Rabbit Mq using the filed exchange, routing key, activity
+            rabbitTemplate.convertAndSend(exchange,routingkey,activity);  ///@Sent the message to the Rabbit Mq using the field exchange, routing key, activity
         }catch(Exception e){
             log.error("Message cannot be sent to RabbitMQ", e.getMessage());
         }
