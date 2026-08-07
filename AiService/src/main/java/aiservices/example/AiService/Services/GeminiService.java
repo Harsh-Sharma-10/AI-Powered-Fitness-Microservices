@@ -38,7 +38,7 @@ public class GeminiService{
                     )
             )
     );
-    ///@Calling_The_API_here_using_WebClient
+    ///@Calling_The_API_here_using_WebClient_Builder_Pattern_(Method_Chaining)
           String response = webClient.post()
                 .uri(geminiapiurl + geminiapikey)
                 .header("Content-Type","application/json")

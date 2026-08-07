@@ -5,10 +5,8 @@ package com.fitness_microservices.activityservices.Controller;
 import com.fitness_microservices.activityservices.ActivityDTO.ActivityRequest;
 import com.fitness_microservices.activityservices.ActivityDTO.ActivityResponse;
 import com.fitness_microservices.activityservices.Services.ActivityServices;
-import com.fitness_microservices.activityservices.model.Activity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -37,8 +35,8 @@ public class Activitycontroller {
 
     @GetMapping("/usersactivities")
     public ResponseEntity<List<ActivityResponse>> getAllUserActivities(
-            @RequestHeader("Z-user-id") String userid) {  /// A headet is passed and we have to enter
-        return ResponseEntity.ok(activityServices.getActivitiesByUserid(userid));                                       /// the value for the header Header Key --> Value(have to enter)
+            @RequestHeader("Z-user-id") String userid) {  /// A header is passed and we have to enter
+        return ResponseEntity.ok(activityServices.getActivitiesByUserid(userid)); /// the value for the Header Key --> Value(have to enter)
     }
 
     @PostMapping("/addActivity")

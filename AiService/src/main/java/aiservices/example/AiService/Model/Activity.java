@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-@Data
+@Data  /// It is Just a structure for retrieve the messages from the Queue of RabbitMQ
 public class Activity {
 
      private String activityId;

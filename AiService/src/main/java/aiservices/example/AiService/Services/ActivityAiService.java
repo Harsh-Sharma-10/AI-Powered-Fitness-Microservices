@@ -20,42 +20,49 @@ public class ActivityAiService {
     public String generateRecommendation(Activity activity) {
         String prompt = createPromptactivity(activity);
         String airesponse = geminiService.getAnswer(prompt);
-        processAiresponse(activity, airesponse);
+        processingAIresponse(airesponse, activity);
         return airesponse;
-
     }
-    private void processAiresponse(Activity activity, String airesponse) {
+
+    /// Here we are parsing the AI response we get from getAnswer() of geminiservices in JSON format to the String
+    private void processingAIresponse(String airesponse,Activity activity) {
         try{
             ObjectMapper mapper = new ObjectMapper();
+
             JsonNode jsonNode = mapper.readTree(airesponse);
 
-            JsonNode textnode = jsonNode.path("candidates")
+
+            JsonNode content = jsonNode.path("candidates")
                     .get(0)
                     .path("content")
                     .path("parts")
                     .get(0)
                     .path("text");
 
-            String jsontext = textnode.asText()
+            String text = content.asText()
                     .replaceAll("```json\\n","")
                     .replaceAll("\\n```","")
                     .trim();
-            log.info("AI response : " + jsontext);
 
-            JsonNode jsonNode1 = mapper.readTree(jsontext);
+            log.info("Parsed AI Response  : " + text);
+
+            JsonNode jsonNode1 = mapper.readTree(text);
 
             JsonNode analysis = jsonNode1.path("analysis");
 
-            String overall = analysis.path("overall").asText();
-            String pace = analysis.path("pace").asText();
-            String heartRate = analysis.path("heartRate").asText();
-            String calories = analysis.path("caloriesBurned").asText();
+            String overall =  analysis.path("overall").asText();
+            String pace =   analysis.path("pace").asText();
+            String heart = analysis.path("heartRate").asText();
+            String calorioes = analysis.path("caloriesBurned").asText();
 
-            log.info("Overall : {}", overall);
-            log.info("Pace : {}", pace);
-            log.info("Heart Rate : {}", heartRate);
-            log.info("Calories : {}", calories);
-        }catch(Exception ex){
+            log.info(" Overall  : " + overall);
+            log.info(" Pace     : " + pace);
+            log.info(" Heart    : " + heart);
+            log.info(" Calories : " + calorioes);
+
+
+
+        }catch (Exception ex){
             ex.printStackTrace();
         }
     }
@@ -97,7 +104,7 @@ public class ActivityAiService {
         Provide detailed analysis focusing on performance, improvements, next workout suggestions, and safety guidelines.
         Ensure the response follows the EXACT JSON format shown above.
         """,
-                activity.getType(),
+                activity.getType(),           /// This is where we are using the activity to create the Activity Customized Prompt
                 activity.getDuration(),
                 activity.getCalories(),
                 activity.getAdditionalMatrics()
