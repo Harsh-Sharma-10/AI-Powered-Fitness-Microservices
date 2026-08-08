@@ -9,9 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Array;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -148,9 +145,9 @@ public class ActivityAiService {
 
         if(improvementNode.isArray()){
             improvementNode.forEach(improvement -> {
-                String area =   improvement.path("area").asText();
-                String desc =   improvement.path("recommendation").asText();
-                improvementsList.add(String.format("Area : %s\nRecommendation : %s\n", area, desc));
+                String area =   improvement.path("area").asText().trim();
+                String desc =   improvement.path("recommendation").asText().trim();
+                improvementsList.add(String.format("Area : %s -- Recommendation : %s", area, desc));
             });
         }
         return improvementsList.isEmpty() ?
@@ -162,9 +159,9 @@ public class ActivityAiService {
         List<String> suggestions = new ArrayList<>();
         if(suggestionNode.isArray()){
             suggestionNode.forEach(suggestion ->{
-                String WorkOut = suggestion.path("workout").asText();
-                String description = suggestion.path("description").asText();
-                suggestions.add(String.format("Work Out: %s\n Description: %s\n", WorkOut,description));
+                String WorkOut = suggestion.path("workout").asText().trim();
+                String description = suggestion.path("description").asText().trim();
+                suggestions.add(String.format("Work Out: %s : Description: %s", WorkOut,description));
             });
         }
         return suggestions.isEmpty() ?
@@ -177,7 +174,7 @@ public class ActivityAiService {
         if(safetyNode.isArray()){
             safetyNode.forEach( safety ->{
                 if(!safety.isNull()){
-                    safetyList.add(safety.asText());
+                    safetyList.add(safety.asText().trim());
                 }
             });
         }
