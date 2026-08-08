@@ -10,6 +10,10 @@ spring:
     username: guest
     password: guest
 
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.mongodb.driver.protocol.command: TRACE
 
 server:
   port: 8046
