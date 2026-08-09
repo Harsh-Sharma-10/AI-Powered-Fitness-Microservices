@@ -5,12 +5,10 @@ spring:
   application:
     name: User-Services
 
-
-
   datasource:
     url: jdbc:postgresql://localhost:5432/fitness_user_db
-    username: postgres
-    password: harsh@db
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:

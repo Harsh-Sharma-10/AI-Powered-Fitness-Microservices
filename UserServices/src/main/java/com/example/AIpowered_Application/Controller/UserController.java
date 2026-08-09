@@ -7,6 +7,9 @@ import com.example.AIpowered_Application.Model.User;
 import com.example.AIpowered_Application.Repository.UserRepository;
 import com.example.AIpowered_Application.Services.UserServices;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +36,9 @@ public class UserController {
         return ResponseEntity.ok(userServices.findbyemail(email));
     }
     @GetMapping("/allusers")
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        return ResponseEntity.ok(userServices.findall());
+    public ResponseEntity<Page<UserResponse>> getAllUsers(
+            @PageableDefault(size = 20)Pageable pageable) {
+        return ResponseEntity.ok(userServices.findall(pageable));
     }
 
     @GetMapping("/{userid}/validate")        /// Endpoint Point for the user validation

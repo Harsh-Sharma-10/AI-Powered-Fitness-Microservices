@@ -3,18 +3,19 @@ package com.example.AIpowered_Application.Services;
 
 import com.example.AIpowered_Application.Dto.UserRequests;
 import com.example.AIpowered_Application.Dto.UserResponse;
+import com.example.AIpowered_Application.Exceptions.UserAlreadyExistsException;
+import com.example.AIpowered_Application.Exceptions.UserNotFoundException;
 import com.example.AIpowered_Application.Mapper.UserMapperDtos;
 import com.example.AIpowered_Application.Model.User;
 import com.example.AIpowered_Application.Model.User_Logs;
 import com.example.AIpowered_Application.Repository.UserLogsRepository;
 import com.example.AIpowered_Application.Repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,41 +30,41 @@ public class UserServices {
     }
 
     public UserResponse findbyuserid(String userid){
-        User user  = userRepository.findById(userid)
-                .orElseThrow(()-> new RuntimeException("User not found!"));
-
+        User user = userRepository.findById(userid)
+                .orElseThrow(()->
+                        new UserNotFoundException(String.format("User with id %s not found",userid)));
         return UserMapperDtos.responseDto(user);
+
     }
     public UserResponse findbyemail(String email){
-        User user  = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not Exists !!! "));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with email %s not found",email)));
         return UserMapperDtos.responseDto(user);
+
+    }
+    public Page<UserResponse> findall(Pageable pageable){
+        return userRepository.findAll(pageable)
+                .map(UserMapperDtos::responseDto);
+
     }
 
-    public List<UserResponse> findall(){
-          List<User> users = userRepository.findAll();
-          if(users.isEmpty())throw new RuntimeException("There is no users Exists !!! ");
-          return users
-                  .stream()
-                  .map(UserMapperDtos::responseDto)
-                  .collect(Collectors.toList());
-    }
+    public UserResponse adduser(UserRequests userRequests)  {
 
-    public UserResponse adduser(UserRequests userRequests){
-
-        if(userRepository.existsByEmail(userRequests.getEmail())){
-            throw new RuntimeException("Email Already Exists");
+        if(userRepository.findByEmail(userRequests.getEmail()).isPresent()){
+             throw new UserAlreadyExistsException("User is Already exists with this email !!!"+userRequests.getEmail());
         }
-         User user  = UserMapperDtos.requestDto(userRequests);
-         return UserMapperDtos.responseDto(userRepository.save(user));
+        User user = UserMapperDtos.requestDto(userRequests);
+        User saaved = userRepository.save(user);
+        return UserMapperDtos.responseDto(saaved);
 
     }
     public void deleteuser(String userid){
         if(userLogsRepository.existsByoriginalid(userid)){
-            throw new RuntimeException("User Already deleted Exists !!!");
+            throw new RuntimeException("User is Already Deleted !!!");
         }
         User user = userRepository.findById(userid)
-                .orElseThrow(() -> new RuntimeException("User is NOT Exists !!!"));
+                .orElseThrow(() ->
+                        new UserNotFoundException("User is NOT Exists !!!"));
 
         User_Logs userLogs = new  User_Logs();
         userLogs.setOriginalid(user.getId());
