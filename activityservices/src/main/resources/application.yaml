@@ -1,38 +1,6 @@
-server:
-  port: 8045
-
 spring:
   application:
-    name: Activity-Services
-  jackson:
-    time-zone: Asia/Kolkata
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/Activity_db
-      database: Activity_db
-      properties:
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    name: activity-services
 
-logging:
-  level:
-    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
-    org.mongodb.driver.protocol.command: TRACE
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
-
-rabbitmq:
-  exchange:
-    name: fitness.exchange
-  queue:
-    name: activity.queue
-  routing:
-    key: activity.routing
+  config:
+    import: optional:configserver:http://localhost:8001

@@ -1,20 +1,16 @@
 package aiservices.example.AiService.Model;
 
-
-import jdk.jshell.SourceCodeAnalysis;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.annotation.processing.Generated;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Builder
-@Document(collection = "Ai_Reccomendation")
+@Document(collection = "AiRecommendations")
 public class Recommendation {
 
        @Id
@@ -24,7 +20,7 @@ public class Recommendation {
        private String userId;
        private String activityType;
        private String recommendations;
-       private List<String> improvements;
+       private  List<String> improvements;
        private  List<String> suggestions;
        private  List<String> safety;
 
